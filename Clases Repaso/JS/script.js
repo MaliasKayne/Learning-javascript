@@ -1,5 +1,7 @@
 let ataqueJugador;
 let ataqueEnemigo;
+let vidasJugador = 3
+let vidasEnemigo = 3
 
 function iniciarJuego() {
     let botonMascotaJugador = document.getElementById("botonMascota");
@@ -13,6 +15,9 @@ function iniciarJuego() {
 
     let botonTierra = document.getElementById("ataqueTierra");
     botonTierra.addEventListener("click", ataqueTierra);
+
+    let botonReiniciar = document.getElementById("botonReiniciar");
+    botonReiniciar.addEventListener("click", reiniciarJuego);
 }
 
 function ataqueFuego() {
@@ -71,13 +76,90 @@ function seleccionarMascotaEnemigo() {
     } else {
         spanMascotaEnemigo.innerHTML = "Ratigueya";
     }
+
+    let botonFuego = document.getElementById("ataqueFuego");
+    botonFuego.disabled = false;
+
+    let botonAgua = document.getElementById("ataqueAgua");
+    botonAgua.disabled = false;
+
+    let botonTierra = document.getElementById("ataqueTierra");
+    botonTierra.disabled = false;
 }
 
 function crearMensaje(){
+    const resultado = combat();
     let parrafo = document.createElement("p");
-    parrafo.innerHTML = "Tu mascota ataco con " + ataqueJugador + ", y la mascota del enemigo ataco con " + ataqueEnemigo;
+    parrafo.innerHTML = "Tu mascota ataco con " + ataqueJugador + ", y la mascota del enemigo ataco con " + ataqueEnemigo + "<br>" + resultado;
     let sectionMensajes = document.getElementById("mensajes");
     sectionMensajes.appendChild(parrafo);
+
+    if (vidasEnemigo === 0 || vidasJugador === 0) {
+        cambiarEstadoBotones();
+        if (vidasEnemigo === 0) {
+            alert("¡Felicidades! Has ganado la batalla.");
+        } else {
+            alert("Lo siento, has perdido la batalla.");
+        }
+    }
+}
+
+function combat() {
+    if (ataqueJugador === ataqueEnemigo) return "Empate";
+
+    if (
+        (ataqueJugador === "Ataque Fuego" && ataqueEnemigo === "Ataque Tierra") ||
+        (ataqueJugador === "Ataque Agua" && ataqueEnemigo === "Ataque Fuego") ||
+        (ataqueJugador === "Ataque Tierra" && ataqueEnemigo === "Ataque Agua")
+    ) {
+        vidasEnemigo--;
+        let vidasEnemigoSpan = document.getElementById("vidasEnemigo");
+        vidasEnemigoSpan.innerHTML = vidasEnemigo;
+        return "Ganaste";
+    }
+
+    vidasJugador--;
+    let vidasJugadorSpan = document.getElementById("vidasJugador");
+    vidasJugadorSpan.innerHTML = vidasJugador;
+    return "Perdiste";
+
+}
+
+function cambiarEstadoBotones(reinicio = false) {
+    const botonFuego = document.getElementById("ataqueFuego");
+    const botonAgua = document.getElementById("ataqueAgua");
+    const botonTierra = document.getElementById("ataqueTierra");
+    const botonMascotaJugador = document.getElementById("botonMascota");
+    const radioButtons = document.getElementsByName("mascota");
+
+    botonMascotaJugador.disabled = !botonMascotaJugador.disabled;
+    botonFuego.disabled = reinicio ? true : !botonFuego.disabled;
+    botonAgua.disabled = reinicio ? true : !botonAgua.disabled;
+    botonTierra.disabled = reinicio ? true : !botonTierra.disabled;
+    for (const radioButton of radioButtons) {
+        radioButton.disabled = reinicio ? true : !radioButton.disabled;
+    }
+}
+
+function reiniciarJuego() {
+	ataqueJugador = '';
+	ataqueEnemigo = '';
+	vidasJugador = 3;
+	vidasEnemigo = 3;
+
+	const sectionMensajes = document.getElementById('mensajes');
+	sectionMensajes.innerHTML = '';
+
+	const vidasEnemigoSpan = document.getElementById('vidasEnemigo');
+	const vidasJugadorSpan = document.getElementById('vidasJugador');
+
+	vidasEnemigoSpan.innerHTML = vidasEnemigo;
+	vidasJugadorSpan.innerHTML = vidasJugador;
+
+	let botonMascotaJugador = document.getElementById('botonMascota');
+	botonMascotaJugador.disabled = false;
+
+	cambiarEstadoBotones(true);
 }
 
 window.addEventListener('load', iniciarJuego);
