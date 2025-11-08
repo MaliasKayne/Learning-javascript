@@ -8,9 +8,6 @@ const botonReiniciar = document.getElementById('boton-reiniciar');
 const sectionMensajes = document.getElementById('resultado');
 const ataquesDelJugador = document.getElementById('ataques-del-jugador');
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo');
-const inputHipodoge = document.getElementById("hipodoge");
-const inputCapipepo = document.getElementById("capipepo");
-const inputRatigueya = document.getElementById("ratigueya");
 const spanMascotaJugador = document.getElementById("mascota-jugador");
 const vidasEnemigoSpan = document.getElementById('vidas-enemigo');
 const vidasJugadorSpan = document.getElementById('vidas-jugador');
@@ -101,6 +98,7 @@ function iniciarJuego() {
 	botonTierra.addEventListener('click', ataqueTierra);
 	botonReiniciar.addEventListener('click', reiniciarJuego);
 }
+
 
 function reiniciarJuego() {
 	ataqueJugador = '';
@@ -212,16 +210,19 @@ function crearMensajeFinal() {
 }
 
 function seleccionarMascotaJugador() {
-  if (inputHipodoge.checked) {
-    spanMascotaJugador.innerHTML = "Hipodoge";
-  } else if (inputCapipepo.checked) {
-    spanMascotaJugador.innerHTML = "Capipepo";
-  } else if (inputRatigueya.checked) {
-    spanMascotaJugador.innerHTML = "Ratigueya";
-  } else {
-    alert("Selecciona una mascota");
-		return;
-  }
+	const inputHipodoge = document.getElementById("hipodoge");
+	const inputCapipepo = document.getElementById("capipepo");
+	const inputRatigueya = document.getElementById("ratigueya");
+	if (inputHipodoge.checked) {
+		spanMascotaJugador.innerHTML = "Hipodoge";
+	} else if (inputCapipepo.checked) {
+		spanMascotaJugador.innerHTML = "Capipepo";
+	} else if (inputRatigueya.checked) {
+		spanMascotaJugador.innerHTML = "Ratigueya";
+	} else {
+		alert("Selecciona una mascota");
+			return;
+	}
 
 	botonMascotaJugador.disabled = true;
 
