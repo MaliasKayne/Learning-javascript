@@ -19,13 +19,18 @@ const ataquesDelJugador = document.getElementById('ataques-del-jugador');
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo');
 
 const contenedorTarjetas = document.getElementById('contenedor-tarjetas');
+const contenedorAtaques = document.getElementById('contenedorAtaques');
 
 let mokepones = [];
+let ataquesMokepon;
 let ataqueJugador;
 let ataqueEnemigo;
 let opcionDeMokepones;
 let vidasJugador = 3;
 let vidasEnemigo = 3;
+let mascotaJugador = '';
+let mascotaEnemigo = '';
+
 
 class Mokepon {
   constructor(nombre, foto, vida) {
@@ -208,36 +213,46 @@ function crearMensajeFinal() {
 }
 
 function seleccionarMascotaJugador() {
-  const inputHipodoge = document.getElementById("hipodoge");
-  const inputCapipepo = document.getElementById("capipepo");
-  const inputRatigueya = document.getElementById("ratigueya");
+	const inputHipodoge = document.getElementById("hipodoge");
+	const inputCapipepo = document.getElementById("capipepo");
+	const inputRatigueya = document.getElementById("ratigueya");
 
-  if (inputHipodoge.checked) {
-    spanMascotaJugador.innerHTML = "Hipodoge";
-  } else if (inputCapipepo.checked) {
-    spanMascotaJugador.innerHTML = "Capipepo";
-  } else if (inputRatigueya.checked) {
-    spanMascotaJugador.innerHTML = "Ratigueya";
-  } else {
-    alert("Selecciona una mascota");
-		return;
-  }
+	if (inputHipodoge.checked) {
+		spanMascotaJugador.innerHTML = inputHipodoge.id;
+		mascotaJugador = inputHipodoge.id;
+	} else if (inputCapipepo.checked) {
+		spanMascotaJugador.innerHTML = inputCapipepo.id;
+		mascotaJugador = inputCapipepo.id;
+	} else if (inputRatigueya.checked) {
+		spanMascotaJugador.innerHTML = inputRatigueya.id;
+		mascotaJugador = inputRatigueya.id;
+	} else {
+		alert("Selecciona una mascota");
+			return;
+	}
 
+	extraerAtaques();
 	botonMascotaJugador.disabled = true;
 
-  seleccionarMascotaEnemigo();
+  	seleccionarMascotaEnemigo();
+}
+
+function extraerAtaques() {
+	let ataques = mokepones.find((mokepon) => mokepon.nombre === mascotaJugador)?.ataques || [];
+	mostrarAtaques(ataques);
+}
+
+function mostrarAtaques(ataques) {
+	ataques.forEach((ataques) => {
+		contenedorAtaques.innerHTML += `
+		 <button id="${ataques.id}" class="boton-de-ataque BAtaque">${ataques.nombre}</button>`;
+	})
 }
 
 function seleccionarMascotaEnemigo() {
-  let ataqueAleatorio = aleatorio(1, 3); // 1-Hipodoge, 2-Capipepo, 3-Ratigueya trae un numero aleatorio entre 1 y 3
+  	let ataqueAleatorio = aleatorio(1, mokepones.length); // 1-Hipodoge, 2-Capipepo, 3-Ratigueya trae un numero aleatorio entre 1 y 3
   
-  if (ataqueAleatorio == 1) {
-    spanMascotaEnemigo.innerHTML = 'Hipodoge'
-  } else if (ataqueAleatorio == 2) {
-    spanMascotaEnemigo.innerHTML = 'Capipepo'
-  } else {
-    spanMascotaEnemigo.innerHTML = 'Ratigueya'
-  }
+	spanMascotaEnemigo.innerHTML = mokepones [ataqueAleatorio - 1].nombre;
 	
 	seccionSleccionarMascota.style.display = 'none';	
 	seccionSeleccionarAtaque.style.display = 'flex';
