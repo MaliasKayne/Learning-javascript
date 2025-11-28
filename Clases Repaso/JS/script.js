@@ -20,14 +20,14 @@ const contenedorAtaques = document.getElementById('contenedorAtaques');
 
 let mokepones = [];
 let ataqueJugador = [];
-let ataqueEnemigo;
+let ataqueEnemigo = [];
 let opcionDeMokepones;
 let vidasJugador = 3;
 let vidasEnemigo = 3;
 let mascotaJugador = '';
 let mascotaEnemigo = '';
 let ataquesMokepon;
-let ataqueMokeponEnemigo = [];
+let ataquesMokeponEnemigo = [];
 let botonFuego;
 let botonAgua;
 let botonTierra;
@@ -90,7 +90,7 @@ function iniciarJuego() {
 	
 	seccionSeleccionarAtaque.style.display = 'none';
 
-  	mokepones.forEach((mokepon) => {
+  mokepones.forEach((mokepon) => {
     opcionDeMokepones = `
       <input type="radio" name="mascota" id="${mokepon.nombre}" />
       <label class="tarjeta-de-mokepon" for="${mokepon.nombre}" >
@@ -100,7 +100,7 @@ function iniciarJuego() {
     `;
 
     contenedorTarjetas.innerHTML += opcionDeMokepones;
-  	});
+  });
 
 	seccionReiniciar.style.display = 'none';
 
@@ -112,7 +112,9 @@ function iniciarJuego() {
 
 function reiniciarJuego() {
 	ataqueJugador = [];
-	ataqueEnemigo = '';
+	ataqueEnemigo = [];
+  ataquesDelJugador.innerHTML = '';
+  ataquesDelEnemigo.innerHTML = '';
 	vidasJugador = 3;
 	vidasEnemigo = 3;
 	sectionMensajes.innerHTML = 'Mucha suerte';
@@ -126,19 +128,20 @@ function reiniciarJuego() {
 	cambiarEstadoBotones(true);
 }
 
+
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 function ataqueAleatorioeEnemigo() {
-	let ataqueAleatorio = aleatorio(0, ataqueMokeponEnemigo.length - 1);
+	let ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length - 1);
 
 	if (ataqueAleatorio === 0 || ataqueAleatorio === 1) {
-		ataqueEnemigo = 'FUEGO';
-	} else if (ataqueAleatorio === 2 || ataqueAleatorio === 3) {
-		ataqueEnemigo = 'AGUA';
+		ataqueEnemigo.push('FUEGO');
+	} else if (ataqueAleatorio === 4 || ataqueAleatorio === 3) {
+		ataqueEnemigo.push('AGUA');
 	} else {
-		ataqueEnemigo = 'TIERRA';
+		ataqueEnemigo.push('TIERRA');
 	}
 
 	crearMensaje();
@@ -252,33 +255,37 @@ function secuenciaAtaque() {
     botones.forEach((boton) => {
         boton.addEventListener('click', (e) => {
             if (e.target.textContent === '🔥') {
-                ataqueJugador.push('FUEGO')
-                console.log(ataqueJugador)
+                ataqueJugador.push('FUEGO');
+                console.log(ataqueJugador);
                 boton.style.background = '#112f58';
+                boton.style.display = 'none';
             } else if (e.target.textContent === '💧') {
                 ataqueJugador.push('AGUA')
-                console.log(ataqueJugador)
-                boton.style.background = '#112f58'
+                console.log(ataqueJugador);
+                boton.style.background = '#112f58';
+                boton.style.display = 'none';
             } else {
                 ataqueJugador.push('TIERRA')
-                console.log(ataqueJugador)
-                boton.style.background = '#112f58'
+                console.log(ataqueJugador);
+                boton.style.background = '#112f58';
+                boton.style.display = 'none';
             }
+
+            ataqueAleatorioeEnemigo();
         })
     })
-
 }
 
 function seleccionarMascotaEnemigo() {
- 	let mascotaAleatoria = aleatorio(0, mokepones.length - 1);
+  let mascotaAleatoria = aleatorio(0, mokepones.length - 1);
   
-  	spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre;
-	ataqueMokeponEnemigo = mokepones[mascotaAleatoria].ataques;
+  spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre;
+  ataquesMokeponEnemigo = mokepones[mascotaAleatoria].ataques;
 
 
 	seccionSleccionarMascota.style.display = 'none';	
 	seccionSeleccionarAtaque.style.display = 'flex';
-  	secuenciaAtaque();
+  secuenciaAtaque();
 	cambiarEstadoBotones();	
 }
 
